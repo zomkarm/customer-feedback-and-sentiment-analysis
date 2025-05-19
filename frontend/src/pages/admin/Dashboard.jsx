@@ -20,11 +20,13 @@ const barData = [
 
 const COLORS = ["#22c55e", "#facc15", "#ef4444"]; // Tailwind green, yellow, red shades
 
-const AdminDashboard = () => {
+const AdminDashboard = ({ onLogout, adminInfo }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const sidebarRef = useRef(null);
   const toggleButtonRef = useRef(null);
+  const admin = JSON.parse(localStorage.getItem("adminInfo"));
+
 
   // Load dark mode from localStorage
   useEffect(() => {
@@ -205,7 +207,7 @@ const AdminDashboard = () => {
               )}
             </button>
 
-            <button
+            <button onClick={onLogout}
               className="text-green-700 font-semibold hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 transition-colors duration-200 dark:text-red-400 dark:hover:text-red-600"
             >
               Logout

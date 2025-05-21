@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const AdminLogin = () => {
+const AdminLogin = ({ setAdminToken, setAdminInfo }) => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -16,8 +16,16 @@ const AdminLogin = () => {
 
     try {
       const res = await axios.post("http://localhost:5000/api/admin/login", formData);
+      
+      // Save to localStorage
       localStorage.setItem("adminToken", res.data.token);
-      navigate("/admin/dashboard");
+      localStorage.setItem("adminInfo", JSON.stringify(res.data.admin));
+
+      setAdminToken(res.data.token);
+      setAdminInfo(res.data.admin);
+
+      // Navigate to dashboard manually
+      navigate("/admin/dashboard", { replace: true });
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     }

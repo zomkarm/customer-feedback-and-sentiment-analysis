@@ -7,7 +7,7 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen flex flex-col justify-between bg-gray-50">
       <header className="flex justify-between items-center p-6 shadow-md bg-white">
-        <h1 className="text-2xl font-bold text-blue-600">SentimentSense</h1>
+        <h1 className="text-2xl font-bold text-blue-600">Customer Feedback Analysis</h1>
         <div>
           <Link to="/login" className="mr-4">
             <Button variant="outline">Login</Button>

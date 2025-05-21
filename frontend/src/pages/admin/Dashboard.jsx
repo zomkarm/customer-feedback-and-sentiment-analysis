@@ -25,8 +25,6 @@ const AdminDashboard = ({ onLogout, adminInfo }) => {
   const [darkMode, setDarkMode] = useState(false);
   const sidebarRef = useRef(null);
   const toggleButtonRef = useRef(null);
-  const admin = JSON.parse(localStorage.getItem("adminInfo"));
-
 
   // Load dark mode from localStorage
   useEffect(() => {
@@ -165,7 +163,7 @@ const AdminDashboard = ({ onLogout, adminInfo }) => {
           </button>
 
           <h1 className="text-3xl font-extrabold tracking-tight text-green-800 dark:text-green-400">
-            Welcome, AdminName
+            Welcome, {adminInfo?.name || "Admin"}
           </h1>
 
           <div className="flex items-center gap-4">

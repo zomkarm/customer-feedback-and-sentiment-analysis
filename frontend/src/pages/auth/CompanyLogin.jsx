@@ -33,7 +33,6 @@ const CompanyLogin = () => {
         companyName: res.data.company.name,
         companyId: res.data.company.id,
       }));
-      console.log("token in login.."+res.data.token);
 
       navigate("/company/dashboard", { replace: true });
     } catch (err) {

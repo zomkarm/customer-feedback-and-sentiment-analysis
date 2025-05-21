@@ -33,7 +33,7 @@ const CompanyLogin = () => {
         companyName: res.data.company.name,
         companyId: res.data.company.id,
       }));
-
+      console.log("token in login.."+res.data.token);
 
       navigate("/company/dashboard", { replace: true });
     } catch (err) {
@@ -43,15 +43,15 @@ const CompanyLogin = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
-      {message && (
-        <div className={`alert ${messageType === "success" ? "alert-success" : "alert-error"}`}>
-          {message}
-        </div>
-      )}
       <form
         onSubmit={handleSubmit}
         className="bg-white dark:bg-gray-800 p-6 rounded-md shadow-md w-full max-w-md"
       >
+        {message && (
+        <div className={`alert ${messageType === "success" ? "alert-success" : "alert-error"}`}>
+          {message}
+        </div>
+      )}
         <h2 className="text-2xl font-semibold mb-4 dark:text-white">Company Login</h2>
 
         <input

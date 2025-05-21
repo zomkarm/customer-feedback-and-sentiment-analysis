@@ -15,6 +15,7 @@ app.use(cors());
 app.use("/api/admin", require("./routes/adminRoutes"));
 app.use("/api/company", require("./routes/companyRoutes"));
 //app.use("/api/feedback", require("./routes/feedbackRoutes"));
+app.use("/api/survey", require("./routes/surveyRoutes"));
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
 app.get('/a', express.json(), (req, res) => {

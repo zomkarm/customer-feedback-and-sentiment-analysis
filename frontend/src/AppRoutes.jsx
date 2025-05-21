@@ -10,6 +10,7 @@ import AdminSignup from "./pages/auth/AdminSignup";
 import CompanyDashboard from "./pages/company/Dashboard";
 import AdminDashboard from "./pages/admin/Dashboard";
 import PublicForm from "./pages/feedback/PublicForm";
+import CompanyProtectedRoute from "./components/route/CompanyProtectedRoute";
 
 const AppRoutes = () => {
   const [adminToken, setAdminToken] = useState(null);
@@ -48,7 +49,11 @@ const AppRoutes = () => {
         }
         />
         <Route path="/admin/signup" element={<AdminSignup />} />
-        <Route path="/company/dashboard" element={<CompanyDashboard onLogout={handleLogout} />} />
+        <Route path="/company/dashboard" element={
+          <CompanyProtectedRoute>
+            <CompanyDashboard />
+          </CompanyProtectedRoute>
+        } />
         <Route
             path="/admin/dashboard"
             element={

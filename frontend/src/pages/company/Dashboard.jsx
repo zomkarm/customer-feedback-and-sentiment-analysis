@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   PieChart, Pie, Cell,
   BarChart, Bar, XAxis, YAxis, Tooltip, Legend,
@@ -23,8 +24,33 @@ const COLORS = ["#22c55e", "#facc15", "#ef4444"]; // Tailwind green, yellow, red
 const CompanyDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [company, setCompany] = useState(null);
+  const navigate = useNavigate();
   const sidebarRef = useRef(null);
   const toggleButtonRef = useRef(null);
+
+  // Load and verify auth
+  useEffect(() => {
+    const storedData = localStorage.getItem("companyAuth");
+    if (!storedData) {
+      navigate("/login"); // redirect if not logged in
+    } else {
+      try {
+        const parsed = JSON.parse(storedData);
+        setCompany(parsed);
+      } catch (err) {
+        console.error("Auth parsing error", err);
+        localStorage.removeItem("companyAuth");
+        navigate("/login");
+      }
+    }
+  }, [navigate]);
+
+  // Logout handler
+  const handleLogout = () => {
+    localStorage.removeItem("companyAuth");
+    navigate("/login");
+  };
 
   // Load dark mode from localStorage
   useEffect(() => {
@@ -163,7 +189,7 @@ const CompanyDashboard = () => {
           </button>
 
           <h1 className="text-3xl font-extrabold tracking-tight text-green-800 dark:text-green-400">
-            Welcome, CompanyName
+            Welcome, {company?.companyName || "Company"}
           </h1>
 
           <div className="flex items-center gap-4">
@@ -205,7 +231,7 @@ const CompanyDashboard = () => {
               )}
             </button>
 
-            <button
+            <button onClick={handleLogout}
               className="text-green-700 font-semibold hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 transition-colors duration-200 dark:text-red-400 dark:hover:text-red-600"
             >
               Logout

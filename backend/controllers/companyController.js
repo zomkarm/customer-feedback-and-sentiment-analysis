@@ -9,7 +9,7 @@ exports.signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    const existingCompany = await Company.findOne({ email });
+    const existingCompany = await Company.findOne({ email, isActive: true });
     if (existingCompany) {
       return res.status(400).json({ message: "Email already registered." });
     }
@@ -48,7 +48,7 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const company = await Company.findOne({ email });
+    const company = await Company.findOne({ email, isActive: true });
     if (!company) {
       return res.status(400).json({ message: "Invalid credentials." });
     }
@@ -74,5 +74,16 @@ exports.login = async (req, res) => {
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Server error during login." });
+  }
+};
+
+exports.listCompanies = async (req, res) => {
+  try {
+
+    const companies = await Company.find().select("-password");;
+    res.status(200).json(companies);
+  } catch (error) {
+    console.error("Error fetching surveys:", error);
+    res.status(500).json({ message: "Failed to fetch surveys." });
   }
 };

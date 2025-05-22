@@ -1,6 +1,7 @@
 const Admin = require("../models/Admin");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const Company = require("../models/Company");
 
 exports.registerAdmin = async (req, res) => {
   const { name, email, password } = req.body;
@@ -46,7 +47,7 @@ exports.loginAdmin = async (req, res) => {
         return res.status(400).json({ message: "Invalid credentials" });
       }
       
-      const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+      const token = jwt.sign({ id: admin._id, name: admin.name, role: "admin"}, process.env.JWT_SECRET, { expiresIn: "1d" });
   
       res.status(200).json({
         message: "Login successful",
@@ -59,5 +60,25 @@ exports.loginAdmin = async (req, res) => {
       });
     } catch (err) {
       res.status(500).json({ message: "Server error" });
+    }
+  };
+
+  // Toggle company active status (soft delete / restore)
+  exports.toggleCompany = async (req, res) => {
+    try {
+      const company = await Company.findById(req.params.id);
+      if (!company) {
+        return res.status(404).json({ message: 'Company not found' });
+      }
+  
+      company.isActive = !company.isActive;
+      await company.save();
+  
+      res.status(200).json({ 
+        message: `Company ${company.isActive ? 'restored' : 'disabled'} successfully`,
+        isActive: company.isActive
+      });
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
     }
   };

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import {Link } from "react-router-dom";
 
 const AdminSignup = () => {
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
@@ -62,10 +63,16 @@ const AdminSignup = () => {
 
         <button
           type="submit"
-          className="w-full bg-[#94BFA7] text-white py-2 rounded hover:opacity-90"
+          className="w-full mb-3 bg-[#94BFA7] text-white py-2 rounded hover:opacity-90"
         >
           Sign Up
         </button>
+
+        <Link to='/admin/login'>
+        <button
+          className="w-full bg-[#94BFA7] text-white py-2 rounded hover:opacity-90">
+          Login
+        </button></Link>
 
         {successMsg && <p className="text-green-600 mt-3">{successMsg}</p>}
         {errorMsg && <p className="text-red-600 mt-3">{errorMsg}</p>}

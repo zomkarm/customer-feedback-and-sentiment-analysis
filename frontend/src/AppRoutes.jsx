@@ -9,8 +9,9 @@ import AdminLogin from "./pages/auth/AdminLogin";
 import AdminSignup from "./pages/auth/AdminSignup";
 import CompanyDashboard from "./pages/company/Dashboard";
 import AdminDashboard from "./pages/admin/Dashboard";
-import PublicForm from "./pages/feedback/PublicForm";
 import CompanyProtectedRoute from "./components/route/CompanyProtectedRoute";
+import FeedbackForm from "./components/form/FeedbackForm";
+
 
 const AppRoutes = () => {
   const [adminToken, setAdminToken] = useState(null);
@@ -64,7 +65,7 @@ const AppRoutes = () => {
             )
             }
         />
-      <Route path="/feedback/:companyId" element={<PublicForm />} />
+      <Route path="/feedback/:surveyId" element={<FeedbackForm />} />
     </Routes>
   );
 };

@@ -6,7 +6,7 @@ exports.createSurveyProject = async (req, res) => {
     const { title, description } = req.body;
     const companyId = req.company.id;
     const uniquePath = uuidv4(); // for feedback URL
-    const feedbackUrl = `https://yourdomain.com/feedback/${uniquePath}`;
+    const feedbackUrl = `http://localhost:3000/feedback/${uniquePath}`;
 
     const newSurvey = new SurveyProject({
       companyId,
@@ -73,5 +73,18 @@ exports.editSurvey = async (req, res) => {
   } catch (err) {
     console.error("Edit survey error:", err);
     res.status(500).json({ message: "Error updating survey" });
+  }
+};
+
+exports.getSurveyById = async (req, res) => {
+  try {
+    const survey = await SurveyProject.findById(req.params.id);
+    if (!survey) {
+      return res.status(404).json({ message: "Survey not found" });
+    }
+    res.status(200).json(survey);
+  } catch (err) {
+    console.error("Error fetching survey:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };

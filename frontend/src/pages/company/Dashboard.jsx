@@ -5,6 +5,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, Legend,
 } from "recharts";
 import SurveyProjects from "./SurveyProjects";
+import Feedbacks from "./Feedbacks";
 
 const pieData = [
   { name: "Positive", value: 400 },
@@ -41,6 +42,7 @@ const CompanyDashboard = () => {
       try {
         const parsed = JSON.parse(storedData);
         setCompany(parsed);
+        //console.log(parsed);
       } catch (err) {
         console.error("Auth parsing error", err);
         localStorage.removeItem("companyAuth");
@@ -150,7 +152,7 @@ const CompanyDashboard = () => {
           </button>
 
           <h1 className="text-3xl font-extrabold tracking-tight text-green-800 dark:text-green-400">
-            Welcome, {company?.name || "Company"}
+            Welcome, {company?.companyName || "Company"}
           </h1>
 
           <div className="flex items-center gap-4">
@@ -244,18 +246,13 @@ const CompanyDashboard = () => {
               </BarChart>
             </div>
 
-            <div className="bg-white rounded-lg shadow-lg p-6 md:col-span-2 hover:shadow-2xl transition-shadow duration-300 dark:bg-gray-800 dark:shadow-gray-700">
-              <h3 className="text-xl font-semibold mb-4 text-green-700 dark:text-green-400">
-                Embedded Form URL
-              </h3>
-              <code className="text-sm text-gray-600 dark:text-gray-300 select-all block p-3 bg-gray-100 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 break-words">
-                https://yourdomain.com/feedback/123456
-              </code>
-            </div>
           </section>
         )}
 
         {activePage === "Survey Projects" && <SurveyProjects />}
+
+        {activePage === "Feedback" && <Feedbacks />}
+
 
 </main>
 </div>

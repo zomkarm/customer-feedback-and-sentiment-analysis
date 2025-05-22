@@ -9,6 +9,7 @@ connectDB();
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
 // Routes
 //app.use("/api/auth", require("./routes/authRoutes"));
@@ -16,9 +17,10 @@ app.use("/api/admin", require("./routes/adminRoutes"));
 app.use("/api/company", require("./routes/companyRoutes"));
 //app.use("/api/feedback", require("./routes/feedbackRoutes"));
 app.use("/api/survey", require("./routes/surveyRoutes"));
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use("/api/feedback", require("./routes/feedbackRoutes"));
 
-app.get('/a', express.json(), (req, res) => {
+//Test API
+app.get('/test', express.json(), (req, res) => {
   res.send('route reached /a');
 });
 

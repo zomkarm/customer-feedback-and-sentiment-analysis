@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 
 const AdminLogin = ({ setAdminToken, setAdminInfo }) => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -60,10 +60,16 @@ const AdminLogin = ({ setAdminToken, setAdminInfo }) => {
 
         <button
           type="submit"
-          className="w-full bg-[#94BFA7] text-white py-2 rounded hover:opacity-90"
+          className="w-full mb-3 bg-[#94BFA7] text-white py-2 rounded hover:opacity-90"
         >
           Login
         </button>
+
+        <Link to='/admin/signup'>
+        <button
+          className="w-full bg-[#94BFA7] text-white py-2 rounded hover:opacity-90">
+          Signup
+        </button></Link>
 
         {error && <p className="text-red-600 mt-4">{error}</p>}
       </form>

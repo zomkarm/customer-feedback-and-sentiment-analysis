@@ -44,20 +44,37 @@ exports.submitFeedback = async (req, res) => {
 exports.getAllFeedbacks = async (req, res) => {
   try {
     const companyId = req.company._id;
-    const { surveyId } = req.query;
+    const { surveyId, page = 1, limit = 10 } = req.query;
 
     const query = { companyId };
     if (surveyId) {
       query.surveyId = surveyId;
     }
 
-    const feedbacks = await Feedback.find(query).sort({ createdAt: -1 });
-    res.json(feedbacks);
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const [feedbacks, total] = await Promise.all([
+      Feedback.find(query)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(parseInt(limit)),
+      Feedback.countDocuments(query),
+    ]);
+
+    const pages = Math.ceil(total / parseInt(limit));
+
+    res.json({
+      feedbacks,
+      page: parseInt(page),
+      pages, 
+    });
   } catch (error) {
     console.error("Failed to fetch feedbacks:", error);
     res.status(500).json({ message: "Failed to fetch feedbacks" });
   }
 };
+
+
 
 // @desc    Delete a specific feedback
 // @route   DELETE /api/feedback/:id

@@ -5,20 +5,30 @@ const Feedback = () => {
   const [surveyProjects, setSurveyProjects] = useState([]);
   const [selectedSurveyId, setSelectedSurveyId] = useState("");
   const [feedbacks, setFeedbacks] = useState([]);
-  const [showModal, setShowModal] = useState(false);
   const [selectedFeedback, setSelectedFeedback] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+  // Pagination
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 10;
 
   const companyAuth = JSON.parse(localStorage.getItem("companyAuth"));
   const token = companyAuth?.token;
 
-  // Separated for reuse
   const fetchFeedbacks = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/feedback", {
         headers: { Authorization: `Bearer ${token}` },
-        params: selectedSurveyId ? { surveyId: selectedSurveyId } : {},
+        params: {
+          surveyId: selectedSurveyId,
+          page,
+          limit,
+        },
       });
-      setFeedbacks(res.data);
+      //console.log(res);
+      setFeedbacks(res.data.feedbacks);
+      setTotalPages(res.data.pages);
     } catch (err) {
       console.error("Failed to fetch feedbacks", err);
     }
@@ -27,7 +37,7 @@ const Feedback = () => {
   useEffect(() => {
     const fetchSurveys = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/survey/list", {
+        const res = await axios.get("http://localhost:5000/api/survey/list?isPaginated=false", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setSurveyProjects(res.data);
@@ -40,7 +50,7 @@ const Feedback = () => {
 
   useEffect(() => {
     fetchFeedbacks();
-  }, [token, selectedSurveyId]);
+  }, [token, selectedSurveyId, page]);
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this feedback?")) return;
@@ -48,10 +58,32 @@ const Feedback = () => {
       await axios.delete(`http://localhost:5000/api/feedback/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setFeedbacks((prev) => prev.filter((f) => f._id !== id));
+      fetchFeedbacks(); // Refresh after deletion
     } catch (err) {
       console.error("Delete failed", err);
     }
+  };
+
+  const handleExportCSV = () => {
+    const headers = ["Rating", "Category", "Comment", "Date"];
+    const rows = feedbacks.map((fb) => [
+      fb.rating,
+      fb.category,
+      `"${fb.comment.replace(/"/g, '""')}"`,
+      new Date(fb.createdAt).toLocaleString(),
+    ]);
+
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers, ...rows].map((e) => e.join(",")).join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "feedbacks.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const openModal = (feedback) => {
@@ -64,28 +96,11 @@ const Feedback = () => {
     setSelectedFeedback(null);
   };
 
-  const handleExportCSV = () => {
-    const headers = ["Rating", "Category", "Comment", "Date"];
-    const rows = feedbacks.map(fb => [
-      fb.rating,
-      fb.category,
-      `"${fb.comment.replace(/"/g, '""')}"`, // Escape quotes
-      new Date(fb.createdAt).toLocaleString()
-    ]);
-  
-    const csvContent =
-      "data:text/csv;charset=utf-8," +
-      [headers, ...rows].map(e => e.join(",")).join("\n");
-  
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "feedbacks.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setPage(newPage);
+    }
   };
-  
 
   return (
     <div className="space-y-6">
@@ -95,7 +110,10 @@ const Feedback = () => {
           <select
             className="px-4 py-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:text-white"
             value={selectedSurveyId}
-            onChange={(e) => setSelectedSurveyId(e.target.value)}
+            onChange={(e) => {
+              setSelectedSurveyId(e.target.value);
+              setPage(1); // Reset to page 1 on filter change
+            }}
           >
             <option value="">All Projects</option>
             {surveyProjects.map((survey) => (
@@ -115,9 +133,9 @@ const Feedback = () => {
             onClick={handleExportCSV}
             title="Export CSV"
             className="p-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
-            >
+          >
             📄
-            </button>
+          </button>
         </div>
       </div>
 
@@ -165,6 +183,29 @@ const Feedback = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center mt-4 space-x-4">
+          <button
+            onClick={() => handlePageChange(page - 1)}
+            disabled={page === 1}
+            className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded disabled:opacity-50"
+          >
+            ⬅ Prev
+          </button>
+          <span className="text-sm dark:text-white">
+            Page {page} of {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(page + 1)}
+            disabled={page === totalPages}
+            className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded disabled:opacity-50"
+          >
+            Next ➡
+          </button>
+        </div>
+      )}
 
       {/* Modal */}
       {showModal && selectedFeedback && (

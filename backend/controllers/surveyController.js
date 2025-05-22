@@ -28,23 +28,82 @@ exports.createSurveyProject = async (req, res) => {
 
 exports.listSurveys = async (req, res) => {
   try {
-    const companyId = req.company._id;
+    const isPaginated = req.query.isPaginated;
+    if(isPaginated=="true"){
+    
+      const companyId = req.company._id;
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
+      const skip = (page - 1) * limit;
 
-    const surveys = await SurveyProject.find({ companyId: companyId }).sort({ createdAt: -1 });
+      const total = await SurveyProject.countDocuments({ companyId });
+      const surveys = await SurveyProject.find({ companyId })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
 
-    res.status(200).json(surveys);
+      res.status(200).json({
+        surveys,
+        total,
+        page,
+        totalPages: Math.ceil(total / limit),
+      });
+    }else{
+      const companyId = req.company._id;
+
+      const surveys = await SurveyProject.find({ companyId: companyId }).sort({ createdAt: -1 });
+
+      res.status(200).json(surveys);
+    }
   } catch (error) {
     console.error("Error fetching surveys:", error);
     res.status(500).json({ message: "Failed to fetch surveys." });
   }
 };
 
-// DELETE /api/survey/:id
+/*exports.listSurveys = async (req, res) => {
+  try {
+    const companyId = req.company._id;
+    const isPaginated = req.query.isPaginated === "true";
+
+    let surveys, total, page, totalPages;
+
+    if (isPaginated) {
+      page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
+      const skip = (page - 1) * limit;
+
+      total = await SurveyProject.countDocuments({ companyId });
+      surveys = await SurveyProject.find({ companyId })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
+      totalPages = Math.ceil(total / limit);
+    } else {
+      surveys = await SurveyProject.find({ companyId }).sort({ createdAt: -1 });
+      total = surveys.length;
+      page = 1;
+      totalPages = 1;
+    }
+
+    res.status(200).json({
+      surveys,
+      total,
+      page,
+      totalPages,
+    });
+  } catch (error) {
+    console.error("Error fetching surveys:", error);
+    res.status(500).json({ message: "Failed to fetch surveys." });
+  }
+};*/
+
+
 exports.deleteSurvey = async (req, res) => {
   try {
     const { id } = req.params;
     const companyId = req.company._id;
-    const survey = await SurveyProject.findOneAndDelete({ _id: id, companyId: companyId });
+    const survey = await SurveyProject.findOneAndDelete({ _id: id, companyId });
 
     if (!survey) return res.status(404).json({ message: "Survey not found" });
 
@@ -55,7 +114,6 @@ exports.deleteSurvey = async (req, res) => {
   }
 };
 
-// PUT /api/survey/:id
 exports.editSurvey = async (req, res) => {
   try {
     const { id } = req.params;

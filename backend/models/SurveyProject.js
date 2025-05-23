@@ -9,6 +9,7 @@ const SurveyProjectSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String },
   feedbackUrl: { type: String, required: true, unique: true },
+  uniqueHash: { type: String, required: true, unique: true },
   createdAt: { type: Date, default: Date.now },
 });
 

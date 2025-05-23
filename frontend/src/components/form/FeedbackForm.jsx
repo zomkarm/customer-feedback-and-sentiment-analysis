@@ -44,7 +44,7 @@ const FeedbackForm = () => {
       setSubmitted(true);
     } catch (err) {
       console.error(err);
-      setError("Failed to submit feedback.");
+      setError("Server Error / Feedback already submitted.");
     }
   };
 
@@ -136,6 +136,18 @@ const FeedbackForm = () => {
                 value={formData.suggestion}
                 onChange={handleChange}
               ></textarea>
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  name="recommend"
+                  checked={formData.recommend}
+                  onChange={(e) =>
+                    setFormData({ ...formData, recommend: e.target.checked })
+                  }
+                  className="w-4 h-4"
+                />
+                <span>Would you recommend us to others?</span>
+              </label>
 
               <button
                 type="submit"

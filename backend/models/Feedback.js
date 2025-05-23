@@ -11,6 +11,14 @@ const feedbackSchema = new mongoose.Schema({
     ref: "Company",
     required: true,
   },
+  name: {                
+    type: String,
+    required: true,
+  },
+  email: {               
+    type: String,
+    required: true,
+  },
   rating: {
     type: Number,
     min: 1,
@@ -25,6 +33,9 @@ const feedbackSchema = new mongoose.Schema({
   comment: {
     type: String,
     required: true,
+  },
+  suggestion: {         // 👈 Add this
+    type: String,
   },
   recommend: {
     type: Boolean,

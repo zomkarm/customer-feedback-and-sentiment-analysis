@@ -1,35 +1,62 @@
 const Feedback = require("../models/Feedback");
 const Company = require("../models/Company");
 const SurveyProject = require("../models/SurveyProject");
+const sendEmail = require("../utils/email");
 
 // POST /api/feedback/:surveyId
 exports.submitFeedback = async (req, res) => {
   try {
     const { surveyId } = req.params;
-    const { rating, category, comment, recommend } = req.body;
+    const { name, email, rating, category, comment, recommend, suggestion } = req.body;
 
-    // Validate required fields
-    if (!rating || !category || !comment) {
-      return res.status(400).json({ error: "Rating, category and comment are required." });
+    if (!rating || !category || !comment || !email) {
+      return res.status(400).json({ error: "Rating, category, comment, and email are required." });
     }
 
-    // Validate survey exists
-    const survey = await SurveyProject.findById(surveyId).populate("companyId");
+    const survey = await SurveyProject.findOne({ uniqueHash: surveyId }).populate("companyId");
     if (!survey) {
       return res.status(404).json({ error: "Survey not found" });
     }
 
-    // Create feedback
+    const existing = await Feedback.findOne({ email, surveyId: survey._id });
+    if (existing) {
+      return res.status(409).json({ message: "Duplicate feedback already submitted." });
+    }
+
     const feedback = new Feedback({
       surveyId: survey._id,
       companyId: survey.companyId._id,
+      name,
+      email,
       rating,
       category,
       comment,
       recommend,
+      suggestion,
     });
 
     await feedback.save();
+
+    /*try {
+
+      await sendEmail({
+        to: survey.companyId.email,
+        subject: "New Customer Feedback Received",
+        text: `Rating: ${rating}, Comment: "${comment}"`,
+        html: `
+          <h3>New Feedback Submitted</h3>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Rating:</strong> ${rating}</p>
+          <p><strong>Category:</strong> ${category}</p>
+          <p><strong>Comment:</strong> ${comment}</p>
+          ${suggestion ? `<p><strong>Suggestion:</strong> ${suggestion}</p>` : ""}
+          ${recommend !== undefined ? `<p><strong>Recommend:</strong> ${recommend ? "Yes" : "No"}</p>` : ""}
+        `,
+      });
+    } catch (emailErr) {
+      console.error("Email sending failed:", emailErr.message);
+    }*/
 
     res.status(201).json({ message: "Feedback submitted successfully", feedback });
   } catch (err) {
@@ -37,6 +64,7 @@ exports.submitFeedback = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 // @desc    Get all feedbacks for a company (optionally filter by surveyId)
 // @route   GET /api/feedback

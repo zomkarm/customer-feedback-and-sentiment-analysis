@@ -13,6 +13,7 @@ exports.createSurveyProject = async (req, res) => {
       title,
       description,
       feedbackUrl,
+      uniqueHash: uniquePath,
     });
     await newSurvey.save();
 
@@ -136,7 +137,7 @@ exports.editSurvey = async (req, res) => {
 
 exports.getSurveyById = async (req, res) => {
   try {
-    const survey = await SurveyProject.findById(req.params.id);
+    const survey = await SurveyProject.findOne({ uniqueHash: req.params.id });
     if (!survey) {
       return res.status(404).json({ message: "Survey not found" });
     }

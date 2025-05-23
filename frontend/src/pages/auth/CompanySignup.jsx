@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate,Link } from "react-router-dom";
+import Button from "../../components/ui/Button";
 
 const CompanySignup = () => {
   const [formData, setFormData] = useState({
@@ -74,18 +75,18 @@ const CompanySignup = () => {
           className="w-full p-2 mb-4 border rounded dark:bg-gray-700 dark:text-white"
         />
 
-        <button
+        <Button
           type="submit"
           className="w-full mb-3 bg-[#94BFA7] text-white py-2 rounded hover:opacity-90"
         >
           Signup
-        </button>
+        </Button>
 
         <Link to='/login'>
-        <button
+        <Button
           className="w-full bg-[#94BFA7] text-white py-2 rounded hover:opacity-90">
           Login
-        </button></Link>
+        </Button></Link>
 
         {error && <p className="text-red-600 mt-4">{error}</p>}
       </form>

@@ -11,6 +11,7 @@ import CompanyDashboard from "./pages/company/Dashboard";
 import AdminDashboard from "./pages/admin/Dashboard";
 import CompanyProtectedRoute from "./components/route/CompanyProtectedRoute";
 import FeedbackForm from "./components/form/FeedbackForm";
+import Visualization from "./pages/company/Visualizations";
 
 
 const AppRoutes = () => {
@@ -66,6 +67,7 @@ const AppRoutes = () => {
             }
         />
       <Route path="/feedback/:surveyId" element={<FeedbackForm />} />
+      <Route path="/company/visualization" element={<Visualization />} />
     </Routes>
   );
 };

@@ -6,6 +6,7 @@ import {
 } from "recharts";
 import SurveyProjects from "./SurveyProjects";
 import Feedbacks from "./Feedbacks";
+import Visualization from "./Visualizations";
 
 const pieData = [
   { name: "Positive", value: 400 },
@@ -62,10 +63,9 @@ const CompanyDashboard = () => {
   // Sidebar navigation items including Survey Projects
   const navItems = [
     "Overview",
-    "Survey Projects",  // Added this new page
+    "Survey Projects",  
     "Feedback",
     "Analytics",
-    "Embedded Form",
     "Settings",
   ];
 
@@ -87,7 +87,7 @@ const CompanyDashboard = () => {
         aria-hidden={!sidebarOpen && window.innerWidth < 768}
         ref={sidebarRef}
         className={`
-          fixed top-0 left-0 h-screen w-64
+          fixed top-0 left-0 min-h-screen w-64
           bg-gradient-to-b from-green-600 to-green-800 text-white shadow-lg p-6
           dark:from-gray-800 dark:to-gray-900
           transform transition-transform duration-300 ease-in-out
@@ -252,6 +252,8 @@ const CompanyDashboard = () => {
         {activePage === "Survey Projects" && <SurveyProjects />}
 
         {activePage === "Feedback" && <Feedbacks />}
+
+        {activePage === "Analytics" && <Visualization />}
 
 
 </main>

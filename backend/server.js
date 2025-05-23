@@ -18,6 +18,7 @@ app.use("/api/company", require("./routes/companyRoutes"));
 //app.use("/api/feedback", require("./routes/feedbackRoutes"));
 app.use("/api/survey", require("./routes/surveyRoutes"));
 app.use("/api/feedback", require("./routes/feedbackRoutes"));
+app.use("/api/visualization", require("./routes/visualizationRoutes"));
 
 //Test API
 app.get('/test', express.json(), (req, res) => {

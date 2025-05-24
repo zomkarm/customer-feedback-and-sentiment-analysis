@@ -33,7 +33,7 @@ const Visualization = () => {
   useEffect(() => {
     const fetchSurveys = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/survey/list?isPaginated=false", {
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/survey/list?isPaginated=false`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setSurveys(res.data);
@@ -51,7 +51,7 @@ const Visualization = () => {
       setLoading(true);
       setError("");
       try {
-        const res = await axios.get("http://localhost:5000/api/visualization", {
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/visualization`, {
           params: {
             surveyId: selectedSurvey,
             category: selectedCategory || undefined,

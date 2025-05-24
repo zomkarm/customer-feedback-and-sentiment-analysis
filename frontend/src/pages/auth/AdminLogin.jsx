@@ -15,7 +15,7 @@ const AdminLogin = ({ setAdminToken, setAdminInfo }) => {
     setError("");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/admin/login", formData);
+      const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/admin/login`, formData);
       
       // Save to localStorage
       localStorage.setItem("adminToken", res.data.token);

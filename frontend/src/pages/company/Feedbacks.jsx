@@ -47,7 +47,7 @@ const Feedback = () => {
   useEffect(() => {
     const fetchSurveys = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/survey/list?isPaginated=false", {
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/survey/list?isPaginated=false`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setSurveyProjects(res.data);
@@ -65,7 +65,7 @@ const Feedback = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this feedback?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/feedback/${id}`, {
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/feedback/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchFeedbacks(); // Refresh after deletion

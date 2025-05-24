@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Button from "../../components/ui/Button";
 
 const ManageCompanies = () => {
   const [companies, setCompanies] = useState([]);
@@ -14,7 +13,7 @@ const ManageCompanies = () => {
   const fetchCompanies = async (page = 1) => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/company/all?page=${page}&limit=${limit}`,
+        `${process.env.REACT_APP_API_BASE_URL}/company/all?page=${page}&limit=${limit}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -31,7 +30,7 @@ const ManageCompanies = () => {
 
   const toggleCompanyStatus = async (id) => {
     await axios.patch(
-      `http://localhost:5000/api/admin/toggle-company/${id}`,
+      `${process.env.REACT_APP_API_BASE_URL}/admin/toggle-company/${id}`,
       null,
       {
         headers: { Authorization: `Bearer ${token}` },

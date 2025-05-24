@@ -20,7 +20,7 @@ const CompanySignup = () => {
     setError("");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/company/signup", formData);
+      const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/company/signup`, formData);
 
       // Save token and company info
       localStorage.setItem("companyToken", res.data.token);

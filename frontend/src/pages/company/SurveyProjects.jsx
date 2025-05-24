@@ -32,7 +32,7 @@ const SurveyProjects = () => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/survey/list?page=${page}&limit=${pageSize}&isPaginated=true&search=${encodeURIComponent(query)}`,
+        `${process.env.REACT_APP_API_BASE_URL}/survey/list?page=${page}&limit=${pageSize}&isPaginated=true&search=${encodeURIComponent(query)}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -67,7 +67,7 @@ const SurveyProjects = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this survey?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/survey/${id}`, {
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/survey/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchSurveys(currentPage, searchQuery);

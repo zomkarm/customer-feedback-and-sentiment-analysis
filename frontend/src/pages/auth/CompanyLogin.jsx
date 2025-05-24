@@ -26,7 +26,7 @@ const CompanyLogin = () => {
     setError("");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/company/login", formData);
+      const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/company/login`, formData);
 
       // After successful login API call
       localStorage.setItem("companyAuth", JSON.stringify({

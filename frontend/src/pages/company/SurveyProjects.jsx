@@ -14,14 +14,29 @@ const SurveyProjects = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [pageSize] = useState(10); // Items per page
 
+  const [searchQuery, setSearchQuery] = useState("");
+
   const token = JSON.parse(localStorage.getItem("companyAuth"))?.token;
 
-  const fetchSurveys = async (page = 1) => {
+  // Theme configuration
+  const DASHBOARD_THEME_COLOR = {
+    primary: "#484848",
+    primaryDark: "#3a3a3a",
+    textOnPrimary: "#ffffff",
+    accent: "#22c55e",
+    warning: "#facc15",
+    danger: "#ef4444",
+  };
+
+  const fetchSurveys = async (page = 1, query = "") => {
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:5000/api/survey/list?page=${page}&limit=${pageSize}&isPaginated=true`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        `http://localhost:5000/api/survey/list?page=${page}&limit=${pageSize}&isPaginated=true&search=${encodeURIComponent(query)}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setProjects(res.data.surveys || []);
       setTotalPages(res.data.pages || 1);
       setCurrentPage(page);
@@ -34,13 +49,13 @@ const SurveyProjects = () => {
   };
 
   useEffect(() => {
-    fetchSurveys(currentPage);
+    fetchSurveys(currentPage, searchQuery);
   }, []);
 
   const handleSurveyCreated = () => {
     setIsModalOpen(false);
     setEditSurvey(null);
-    fetchSurveys(currentPage);
+    fetchSurveys(currentPage, searchQuery);
   };
 
   const handleEdit = (id) => {
@@ -55,7 +70,7 @@ const SurveyProjects = () => {
       await axios.delete(`http://localhost:5000/api/survey/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      fetchSurveys(currentPage);
+      fetchSurveys(currentPage, searchQuery);
     } catch (err) {
       console.error("Error deleting survey:", err);
     }
@@ -67,26 +82,42 @@ const SurveyProjects = () => {
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
-      fetchSurveys(page);
+      fetchSurveys(page, searchQuery);
     }
+  };
+
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    fetchSurveys(1, query);
   };
 
   return (
     <div className="space-y-6">
       {/* Top Bar */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold text-green-700 dark:text-green-400">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
+        <h2 className="text-2xl font-bold" style={{ color: DASHBOARD_THEME_COLOR }}>
           Survey Projects
         </h2>
-        <button
-          onClick={() => {
-            setEditSurvey(null);
-            setIsModalOpen(true);
-          }}
-          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
-        >
-          + Create
-        </button>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <input
+            type="text"
+            placeholder="Search surveys..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="border rounded px-3 py-2 w-full sm:w-auto"
+          />
+          <button
+            onClick={() => {
+              setEditSurvey(null);
+              setIsModalOpen(true);
+            }}
+            style={{ backgroundColor: "#484848" }}
+            className="text-white px-4 py-2 rounded-lg hover:opacity-90 transition"
+          >
+            + Create
+          </button>
+        </div>
       </div>
 
       {/* Table */}
@@ -99,7 +130,7 @@ const SurveyProjects = () => {
           <>
             <table className="min-w-full table-auto border-collapse border border-gray-200 dark:border-gray-700">
               <thead>
-                <tr className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300">
+                <tr style={{ backgroundColor: DASHBOARD_THEME_COLOR + '20', color: DASHBOARD_THEME_COLOR }}>
                   <th className="border px-4 py-2 text-left">Title</th>
                   <th className="border px-4 py-2 text-left">Created At</th>
                   <th className="border px-4 py-2 text-center">Actions</th>
@@ -107,16 +138,16 @@ const SurveyProjects = () => {
               </thead>
               <tbody>
                 {projects.map((project) => (
-                  <tr key={project._id} className="hover:bg-green-50 dark:hover:bg-green-900">
+                  <tr key={project._id} className="hover:bg-gray-100 dark:hover:bg-gray-700">
                     <td className="border px-4 py-2">{project.title}</td>
                     <td className="border px-4 py-2">
                       {new Date(project.createdAt).toLocaleDateString()}
                     </td>
                     <td className="border px-4 py-2 text-center space-x-2">
-                      <button onClick={() => handleView(project)} className="text-green-600 hover:underline">
+                      <button onClick={() => handleView(project)} className="text-blue-600 hover:underline">
                         View
                       </button>
-                      <button onClick={() => handleEdit(project._id)} className="text-blue-600 hover:underline">
+                      <button onClick={() => handleEdit(project._id)} className="text-yellow-600 hover:underline">
                         Edit
                       </button>
                       <button onClick={() => handleDelete(project._id)} className="text-red-600 hover:underline">
@@ -149,8 +180,9 @@ const SurveyProjects = () => {
                   key={i}
                   onClick={() => handlePageChange(i + 1)}
                   className={`px-3 py-1 border rounded ${
-                    currentPage === i + 1 ? "bg-green-500 text-white" : ""
+                    currentPage === i + 1 ? "text-white" : ""
                   }`}
+                  style={currentPage === i + 1 ? { backgroundColor: DASHBOARD_THEME_COLOR } : {}}
                 >
                   {i + 1}
                 </button>
@@ -177,7 +209,7 @@ const SurveyProjects = () => {
             >
               ×
             </button>
-            <h3 className="text-xl font-semibold mb-4 text-green-700 dark:text-green-400">
+            <h3 className="text-xl font-semibold mb-4" style={{ color: DASHBOARD_THEME_COLOR }}>
               {editSurvey ? "Edit Survey" : "Create New Survey"}
             </h3>
             <CreateSurveyForm survey={editSurvey} onSurveyCreated={handleSurveyCreated} />
@@ -195,7 +227,7 @@ const SurveyProjects = () => {
             >
               ×
             </button>
-            <h3 className="text-xl font-semibold mb-4 text-green-700 dark:text-green-400">
+            <h3 className="text-xl font-semibold mb-4" style={{ color: DASHBOARD_THEME_COLOR }}>
               Survey Details
             </h3>
             <p><strong>Title:</strong> {viewSurvey.title}</p>

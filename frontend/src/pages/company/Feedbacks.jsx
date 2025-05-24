@@ -8,6 +8,16 @@ const Feedback = () => {
   const [selectedFeedback, setSelectedFeedback] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
+  // Theme configuration
+  const DASHBOARD_THEME_COLOR = {
+    primary: "#484848",
+    primaryDark: "#3a3a3a",
+    textOnPrimary: "#ffffff",
+    accent: "#22c55e",
+    warning: "#facc15",
+    danger: "#ef4444",
+  };
+  
   // Pagination
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -105,7 +115,7 @@ const Feedback = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-green-700 dark:text-green-400">Feedbacks</h2>
+        <h2 className="text-2xl font-bold " style={{ color: DASHBOARD_THEME_COLOR }}>Feedbacks</h2>
         <div className="flex items-center space-x-2">
           <select
             className="px-4 py-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:text-white"
@@ -140,24 +150,24 @@ const Feedback = () => {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow">
-          <thead className="bg-green-600 text-white">
+        <table className="min-w-full table-auto border-collapse border border-gray-200 dark:border-gray-700">
+          <thead className=" text-dark">
             <tr>
-              <th className="py-2 px-4 text-left">Rating</th>
-              <th className="py-2 px-4 text-left">Category</th>
-              <th className="py-2 px-4 text-left">Comment</th>
-              <th className="py-2 px-4 text-left">Date</th>
-              <th className="py-2 px-4 text-left">Actions</th>
+              <th className="border py-2 px-4 text-left">Rating</th>
+              <th className="border py-2 px-4 text-left">Category</th>
+              <th className="border py-2 px-4 text-left">Comment</th>
+              <th className="border py-2 px-4 text-left">Date</th>
+              <th className="border py-2 px-4 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
             {feedbacks.map((fb) => (
               <tr key={fb._id} className="border-b border-gray-200 dark:border-gray-700">
-                <td className="py-2 px-4">{fb.rating}</td>
-                <td className="py-2 px-4">{fb.category}</td>
-                <td className="py-2 px-4 truncate max-w-xs">{fb.comment}</td>
-                <td className="py-2 px-4">{new Date(fb.createdAt).toLocaleString()}</td>
-                <td className="py-2 px-4 space-x-2">
+                <td className="border py-2 px-4">{fb.rating}</td>
+                <td className="border py-2 px-4">{fb.category}</td>
+                <td className="border py-2 px-4 truncate max-w-xs">{fb.comment}</td>
+                <td className="border py-2 px-4">{new Date(fb.createdAt).toLocaleString()}</td>
+                <td className="border py-2 px-4 space-x-2">
                   <button
                     onClick={() => openModal(fb)}
                     className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"

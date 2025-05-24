@@ -21,7 +21,7 @@ const LandingPage = () => {
       </Button>
     </Link>
     <Link to="/signup">
-      <Button className="bg-white text-violet-700 hover:bg-violet-100 px-4 py-2 rounded-md">
+      <Button className="hover:bg-white text-white-700 hover:bg-violet-100 px-4 py-2 rounded-md">
         Sign Up
       </Button>
     </Link>

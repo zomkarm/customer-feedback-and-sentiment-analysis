@@ -162,3 +162,139 @@ JWT_SECRET=your_jwt_secret_key
 ### 📬 Feedback
 
 PRs and contributions are welcome. Please open an issue for bugs or feature requests.
+
+
+## 📊 Analyst & Analytics API
+
+These APIs are accessible **only to authenticated Analysts**. Analysts must log in to retrieve a JWT token, which must be included in the `Authorization` header for all protected requests.
+
+---
+
+### 🔐 Analyst Authentication
+
+#### `POST /api/analyst/login`
+
+Authenticate an analyst and receive a JWT token for accessing protected analytics routes.
+
+- **Request Body**:
+```json
+{
+  "email": "analyst@example.com",
+  "password": "yourpassword"
+}
+```
+
+- **Response**:
+```json
+{
+  "token": "your_jwt_token_here"
+}
+```
+
+- **Usage**: Use this token in the `Authorization` header for all analytics API requests:
+```
+Authorization: Bearer your_jwt_token_here
+```
+
+---
+
+### 📥 `GET /api/analytics/feedbacks`
+
+Fetch detailed feedback data, including associated company and survey information.
+
+- **Headers**:
+  - `Authorization: Bearer <JWT_TOKEN>`
+
+- **Query Parameters** _(optional)_:
+  - `companyId`: Filter by company
+  - `surveyId`: Filter by survey project
+  - `category`: Filter by feedback category
+  - `startDate`: ISO date string
+  - `endDate`: ISO date string
+  - `page`: Page number (default: 1)
+  - `limit`: Items per page (default: 10)
+
+- **Response Example**:
+```json
+{
+  "feedbacks": [
+    {
+      "companyName": "TechCorp",
+      "surveyTitle": "Website Feedback",
+      "location": "New York, USA",
+      "name": "John Doe",
+      "email": "john@example.com",
+      "category": "Website",
+      "rating": 4,
+      "comment": "Great UI!",
+      "suggestion": "Add dark mode",
+      "recommend": true,
+      "submittedAt": "2025-05-24T10:34:00Z"
+    }
+  ],
+  "totalPages": 3,
+  "currentPage": 1
+}
+```
+
+---
+
+### 📈 `GET /api/analytics/summary`
+
+Get summarized feedback insights such as average rating, sentiment breakdown, and category-wise feedback count.
+
+- **Headers**:
+  - `Authorization: Bearer <JWT_TOKEN>`
+
+- **Query Parameters** _(optional)_:
+  - `companyId`
+  - `surveyId`
+  - `startDate`
+  - `endDate`
+
+- **Response Example**:
+```json
+{
+  "averageRating": 4.2,
+  "totalFeedbacks": 250,
+  "sentimentBreakdown": {
+    "positive": 160,
+    "neutral": 60,
+    "negative": 30
+  },
+  "categorySummary": {
+    "Website": 120,
+    "Product": 50,
+    "Customer Support": 80
+  }
+}
+```
+
+---
+
+### 📤 `GET /api/analytics/export`
+
+Export feedback data in CSV format for offline analysis or use in external tools.
+
+- **Headers**:
+  - `Authorization: Bearer <JWT_TOKEN>`
+
+- **Query Parameters** _(optional)_:
+  - `companyId`
+  - `surveyId`
+  - `startDate`
+  - `endDate`
+
+- **Response**:
+  - A downloadable `.csv` file containing feedback details including:
+    - `Company Name`, `Survey Title`, `User Name`, `Email`, `Category`, `Rating`, `Comment`, `Suggestion`, `Recommend`, `Location`, `Submitted Date`
+
+---
+
+### 🔐 Access Control Notes
+
+- All `/api/analytics/...` routes are protected.
+- Only users with valid Analyst credentials can access them.
+- You must use the JWT token obtained from `/api/analyst/login` in the `Authorization` header as:
+```
+Au

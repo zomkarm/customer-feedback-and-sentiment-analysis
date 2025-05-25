@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const feedbackSchema = new mongoose.Schema({
   surveyId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Survey",
+    ref: "SurveyProject",
     required: true,
   },
   companyId: {

@@ -19,7 +19,7 @@ const FeedbackForm = () => {
   useEffect(() => {
     const fetchSurvey = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/survey/${surveyId}`);
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/survey/${surveyId}`);
         setSurvey(res.data);
       } catch (err) {
         console.error(err);
@@ -37,7 +37,7 @@ const FeedbackForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`http://localhost:5000/api/feedback/${surveyId}`, {
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/feedback/${surveyId}`, {
         ...formData,
         surveyId,
       });

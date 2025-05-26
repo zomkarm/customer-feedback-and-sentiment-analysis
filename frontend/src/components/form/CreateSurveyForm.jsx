@@ -29,10 +29,10 @@ const CreateSurveyForm = ({ survey, onSurveyCreated }) => {
 
       if (survey) {
         // Edit
-        await axios.put(`http://localhost:5000/api/survey/${survey._id}`, payload, config);
+        await axios.put(`${process.env.REACT_APP_API_BASE_URL}/survey/${survey._id}`, payload, config);
       } else {
         // Create
-        await axios.post("http://localhost:5000/api/survey/create", payload, config);
+        await axios.post(`${process.env.REACT_APP_API_BASE_URL}/survey/create`, payload, config);
       }
 
       onSurveyCreated();

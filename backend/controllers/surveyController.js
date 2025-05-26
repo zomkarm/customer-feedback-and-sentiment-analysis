@@ -6,7 +6,7 @@ exports.createSurveyProject = async (req, res) => {
     const { title, description } = req.body;
     const companyId = req.company.id;
     const uniquePath = uuidv4(); // for feedback URL
-    const feedbackUrl = `http://localhost:3000/feedback/${uniquePath}`;
+    const feedbackUrl = `${process.env.FRONTEND_URL}/feedback/${uniquePath}`;
 
     const newSurvey = new SurveyProject({
       companyId,

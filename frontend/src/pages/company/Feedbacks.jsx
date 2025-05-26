@@ -28,7 +28,7 @@ const Feedback = () => {
 
   const fetchFeedbacks = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/feedback", {
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/feedback`, {
         headers: { Authorization: `Bearer ${token}` },
         params: {
           surveyId: selectedSurveyId,

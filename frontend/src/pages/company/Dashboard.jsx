@@ -60,6 +60,19 @@ const CompanyDashboard = () => {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    const stored = localStorage.getItem("darkMode");
+    if (stored === "true") {
+      setDarkMode(true);
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", darkMode);
+    localStorage.setItem("darkMode", darkMode ? "true" : "false");
+  }, [darkMode]);
+
   const handleLogout = () => {
     localStorage.removeItem("companyAuth");
     navigate("/login");

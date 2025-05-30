@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend } from "recharts";
-import ManageCompanies from "./ManageCompanies"
+import ManageCompanies from "./ManageCompanies";
+import TableauEmbed from "../../components/ui/TableauEmbed";
 
 const AdminDashboard = ({ onLogout, adminInfo }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -79,9 +80,9 @@ const AdminDashboard = ({ onLogout, adminInfo }) => {
             </div>
 
             {/* Feedback Volume Bar Chart */}
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
+            <div className=" bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
               <h3 className="text-xl font-semibold mb-4 text-green-700 dark:text-green-400">Feedback Volume</h3>
-              <BarChart width={400} height={250} data={volumeData}>
+              <BarChart width={300} height={250} data={volumeData} className="  ">
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
                 <YAxis />
@@ -90,6 +91,7 @@ const AdminDashboard = ({ onLogout, adminInfo }) => {
                 <Bar dataKey="feedbacks" fill="#00C49F" />
               </BarChart>
             </div>
+            <TableauEmbed />
           </section>
         );
     }
@@ -99,8 +101,8 @@ const AdminDashboard = ({ onLogout, adminInfo }) => {
     <div className="flex min-h-screen bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200">
       {/* Sidebar */}
       <aside
-        ref={sidebarRef}
-        className={`fixed md:relative z-30 w-64 h-screen bg-gradient-to-b from-green-600 to-green-800 text-white p-6 transform transition-transform duration-300
+        ref={sidebarRef} style={{ backgroundColor: "#484848"}}
+        className={`fixed md:relative z-30 w-64 min-h-screen bg-gradient-to-b text-white p-6 transform transition-transform duration-300
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
       >
         <h2 className="text-2xl font-extrabold mb-8">Admin Panel</h2>
@@ -111,7 +113,7 @@ const AdminDashboard = ({ onLogout, adminInfo }) => {
               className={`text-left px-4 py-2 rounded ${
                 activePage === item
                   ? "bg-white text-green-800 font-bold"
-                  : "hover:bg-green-700"
+                  : "hover:bg-white hover:text-black"
               }`}
               onClick={() => setActivePage(item)}
             >

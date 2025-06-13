@@ -35,27 +35,44 @@ const LandingPage = () => {
         </div>
         <span
           onClick={handleSidebarToggle}
-          className="md:hidden text-white-700 hover:bg-violet-100 border-2 px-4 py-2 rounded-md"
+          className="md:hidden text-xl cursor-pointer px-4 py-2 border rounded hover:bg-violet-600"
         >
           ☰
         </span>
       </header>
 
+      {/* Overlay background when sidebar is open */}
+      {sidebarToggle && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-40 z-40"
+          onClick={() => setSidebarToggle(false)}
+        />
+      )}
+
       <div
-        className={`mobile-nav md:hidden ${
-          sidebarToggle === false ? "hidden" : ""
-        } fixed left-0 top-0 w-24 bg-blue-400 h-full w-2/6 z-50 transition ease-in-out deley-150 duration-300`}
+        className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform ${
+          sidebarToggle ? "translate-x-0" : "-translate-x-full"
+        } transition-transform duration-300 ease-in-out p-6 space-y-6`}
       >
-        <Link to="/login" className="block m-4">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-semibold text-violet-700">Menu</h2>
+          <button
+            className="text-xl text-gray-600 hover:text-violet-600"
+            onClick={() => setSidebarToggle(false)}
+          >
+            ✕
+          </button>
+        </div>
+        <Link to="/login" onClick={() => setSidebarToggle(false)}>
           <Button
             variant="outline"
-            className="border-white text-white hover:bg-white hover:text-violet-700"
+            className="w-full border-violet-700 text-violet-700 hover:bg-violet-100"
           >
             Login
           </Button>
         </Link>
-        <Link to="/signup"  className="block m-4">
-          <Button  variant="outline" className="border-white text-white hover:bg-white hover:text-violet-700">
+        <Link to="/signup" onClick={() => setSidebarToggle(false)}>
+          <Button className="w-full bg-violet-600 text-white hover:bg-violet-700">
             Sign Up
           </Button>
         </Link>

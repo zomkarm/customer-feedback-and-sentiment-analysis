@@ -33,7 +33,7 @@ const Visualization = () => {
   useEffect(() => {
     const fetchSurveys = async () => {
       try {
-        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/survey/list?isPaginated=false`, {
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/survey/list?isPaginated=false`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setSurveys(res.data);
@@ -51,7 +51,7 @@ const Visualization = () => {
       setLoading(true);
       setError("");
       try {
-        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/visualization`, {
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/visualization`, {
           params: {
             surveyId: selectedSurvey,
             category: selectedCategory || undefined,
@@ -119,153 +119,188 @@ const Visualization = () => {
   };
   
 
-  return (
-    <div className="p-8 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center">Feedback Visualization</h1>
+return (
+  <div className="px-10 py-8 w-full">
+    <h1 className="text-3xl font-bold mb-10 text-center text-gray-800 dark:text-white">
+      Feedback Visualization
+    </h1>
 
-      {error && <p className="text-red-600 mb-4 text-center">{error}</p>}
+    {error && (
+      <p className="text-red-600 mb-6 text-center font-medium">{error}</p>
+    )}
 
-      <div className="flex flex-wrap gap-4 justify-center mb-6">
-        <select
-          value={selectedSurvey}
-          onChange={(e) => setSelectedSurvey(e.target.value)}
-          className="border p-2 rounded"
-        >
-          <option value="">Select Survey</option>
-          {surveys.map((survey) => (
-            <option key={survey._id} value={survey._id}>
-              {survey.title}
-            </option>
-          ))}
-        </select>
+    {/* Filters */}
+    <div className="flex flex-wrap gap-4 justify-center mb-10">
+      <select
+        value={selectedSurvey}
+        onChange={(e) => setSelectedSurvey(e.target.value)}
+        className="border border-gray-300 dark:border-gray-600 p-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 dark:bg-gray-700 dark:text-white"
+      >
+        <option value="">Select Survey</option>
+        {surveys.map((survey) => (
+          <option key={survey._id} value={survey._id}>
+            {survey.title}
+          </option>
+        ))}
+      </select>
 
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="border p-2 rounded"
-        >
-          <option value="">All Categories</option>
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
-      </div>
+      <select
+        value={selectedCategory}
+        onChange={(e) => setSelectedCategory(e.target.value)}
+        className="border border-gray-300 dark:border-gray-600 p-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 dark:bg-gray-700 dark:text-white"
+      >
+        <option value="">All Categories</option>
+        {categories.map((cat) => (
+          <option key={cat} value={cat}>
+            {cat}
+          </option>
+        ))}
+      </select>
+    </div>
 
-      {loading ? (
-        <p className="text-center">Loading...</p>
-      ) : selectedSurvey ? (
-        <>
-        <div className="flex justify-between items-center flex-wrap gap-4 mb-6">
-          <div className="text-center">
-            <h2 className="text-xl font-semibold">Average Rating: {data.averageRating} / 5</h2>
-            <p>Total Feedbacks: {data.totalFeedbacks}</p>
+    {loading ? (
+      <p className="text-center text-gray-600 dark:text-gray-400">Loading...</p>
+    ) : selectedSurvey ? (
+      <>
+        {/* Summary + Export */}
+        <div className="flex flex-col lg:flex-row justify-between items-center gap-6 mb-12">
+          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 shadow flex-1 text-center">
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+              Average Rating: {data.averageRating} / 5
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              Total Feedbacks: {data.totalFeedbacks}
+            </p>
           </div>
-          <div className="flex gap-2">
-            <button onClick={exportAsPDF} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          <div className="flex gap-3">
+            <button
+              onClick={exportAsPDF}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition"
+            >
               Export PDF
             </button>
-            <button onClick={exportAsImage} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+            <button
+              onClick={exportAsImage}
+              className="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700 transition"
+            >
               Export Image
             </button>
-            <button onClick={exportAsCSV} className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+            <button
+              onClick={exportAsCSV}
+              className="bg-yellow-500 text-white px-4 py-2 rounded-lg shadow hover:bg-yellow-600 transition"
+            >
               Export CSV
             </button>
           </div>
         </div>
-          <div className="text-center mb-6">
-            <h2 className="text-xl font-semibold">Average Rating: {data.averageRating} / 5</h2>
-            <p>Total Feedbacks: {data.totalFeedbacks}</p>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-20">
-            {/* Sentiment Distribution Pie */}
-            <div>
-              <h3 className="text-lg font-semibold mb-2 text-center">Sentiment Distribution</h3>
-              <PieChart width={300} height={300}>
-                <Pie
-                  data={sentimentData}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={100}
-                  fill="#8884d8"
-                  dataKey="value"
-                  label
-                >
-                  {sentimentData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend verticalAlign="bottom" height={36} />
-              </PieChart>
-            </div>
+        {/* Charts Grid */}
+<div
+  id="visualization-charts"
+  className="grid grid-cols-1 md:grid-cols-2 gap-12"
+>
+  {/* Sentiment Distribution */}
+  <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 flex flex-col items-center">
+    <h3 className="text-lg font-semibold mb-6 text-center text-gray-800 dark:text-white">
+      Sentiment Distribution
+    </h3>
+    <PieChart width={500} height={350}>
+      <Pie
+        data={sentimentData}
+        cx="50%"
+        cy="50%"
+        outerRadius={140}
+        dataKey="value"
+        label
+      >
+        {sentimentData.map((entry, index) => (
+          <Cell
+            key={`cell-${index}`}
+            fill={COLORS[index % COLORS.length]}
+          />
+        ))}
+      </Pie>
+      <Tooltip />
+      <Legend verticalAlign="bottom" height={36} />
+    </PieChart>
+  </div>
 
-            {/* Sentiment Count Bar */}
-            <div>
-              <h3 className="text-lg font-semibold mb-2 text-center">Sentiment Counts</h3>
-              <BarChart width={300} height={300} data={sentimentData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis allowDecimals={false} />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="value" fill="#82ca9d" />
-              </BarChart>
-            </div>
+  {/* Sentiment Counts */}
+  <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 flex flex-col items-center">
+    <h3 className="text-lg font-semibold mb-6 text-center text-gray-800 dark:text-white">
+      Sentiment Counts
+    </h3>
+    <BarChart width={500} height={350} data={sentimentData}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="name" />
+      <YAxis allowDecimals={false} />
+      <Tooltip />
+      <Legend />
+      <Bar dataKey="value" fill="#82ca9d" />
+    </BarChart>
+  </div>
 
-            {/* Rating Trend Line Chart */}
-            {data?.trendData?.length > 0 && (
-              <div>
-                <h3 className="text-lg font-semibold mb-2 text-center">Average Rating Over Time</h3>
-                <LineChart width={300} height={300} data={data.trendData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis domain={[0, 5]} />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="avgRating" stroke="#ff7300" />
-                </LineChart>
-              </div>
-            )}
-
-            {/* Category-wise Feedback Count */}
-            {data?.categoryCounts?.length > 0 && (
-              <div>
-                <h3 className="text-lg font-semibold mb-2 text-center">Feedbacks by Category</h3>
-                <BarChart width={300} height={300} data={data.categoryCounts}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="category" />
-                  <YAxis allowDecimals={false} />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="count" fill="#8884d8" />
-                </BarChart>
-              </div>
-            )}
-
-            {/* Top Keywords */}
-            {data?.topKeywords?.length > 0 && (
-              <div>
-                <h3 className="text-lg font-semibold mb-2 text-center">Top Keywords</h3>
-                <BarChart width={300} height={300} data={data.topKeywords}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="word" />
-                  <YAxis allowDecimals={false} />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="count" fill="#ffc658" />
-                </BarChart>
-              </div>
-            )}
-          </div>
-        </>
-      ) : (
-        <p className="text-center">Please select a survey to view visualization.</p>
-      )}
+  {/* Rating Trend */}
+  {data?.trendData?.length > 0 && (
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 flex flex-col items-center">
+      <h3 className="text-lg font-semibold mb-6 text-center text-gray-800 dark:text-white">
+        Average Rating Over Time
+      </h3>
+      <LineChart width={500} height={350} data={data.trendData}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="date" />
+        <YAxis domain={[0, 5]} />
+        <Tooltip />
+        <Legend />
+        <Line type="monotone" dataKey="avgRating" stroke="#ff7300" />
+      </LineChart>
     </div>
-  );
+  )}
+
+  {/* Category Counts */}
+  {data?.categoryCounts?.length > 0 && (
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 flex flex-col items-center">
+      <h3 className="text-lg font-semibold mb-6 text-center text-gray-800 dark:text-white">
+        Feedbacks by Category
+      </h3>
+      <BarChart width={500} height={350} data={data.categoryCounts}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="category" />
+        <YAxis allowDecimals={false} />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey="count" fill="#8884d8" />
+      </BarChart>
+    </div>
+  )}
+
+  {/* Top Keywords */}
+  {data?.topKeywords?.length > 0 && (
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 flex flex-col items-center">
+      <h3 className="text-lg font-semibold mb-6 text-center text-gray-800 dark:text-white">
+        Top Keywords
+      </h3>
+      <BarChart width={500} height={350} data={data.topKeywords}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="word" />
+        <YAxis allowDecimals={false} />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey="count" fill="#ffc658" />
+      </BarChart>
+    </div>
+  )}
+</div>
+
+      </>
+    ) : (
+      <p className="text-center text-gray-600 dark:text-gray-400">
+        Please select a survey to view visualization.
+      </p>
+    )}
+  </div>
+);
+
 };
 
 export default Visualization;

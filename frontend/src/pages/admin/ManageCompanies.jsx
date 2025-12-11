@@ -13,7 +13,7 @@ const ManageCompanies = () => {
   const fetchCompanies = async (page = 1) => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/company/all?page=${page}&limit=${limit}`,
+        `${import.meta.env.VITE_API_BASE_URL}/company/all?page=${page}&limit=${limit}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -30,7 +30,7 @@ const ManageCompanies = () => {
 
   const toggleCompanyStatus = async (id) => {
     await axios.patch(
-      `${process.env.REACT_APP_API_BASE_URL}/admin/toggle-company/${id}`,
+      `${import.meta.env.VITE_API_BASE_URL}/admin/toggle-company/${id}`,
       null,
       {
         headers: { Authorization: `Bearer ${token}` },

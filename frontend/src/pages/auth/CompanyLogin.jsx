@@ -26,69 +26,86 @@ const CompanyLogin = () => {
     setError("");
 
     try {
-      const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/company/login`, formData);
-
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/company/login`, formData);
       // After successful login API call
       localStorage.setItem("companyAuth", JSON.stringify({
         token: res.data.token,
         companyName: res.data.company.name,
         companyId: res.data.company.id,
       }));
-
+      
       navigate("/company/dashboard", { replace: true });
     } catch (err) {
+      console.error(err)
       setError(err.response?.data?.message || "Login failed");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
       <form
         onSubmit={handleSubmit}
-        className="bg-white dark:bg-gray-800 p-6 rounded-md shadow-md w-full max-w-md"
+        className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-200 dark:border-gray-700"
       >
         {message && (
-        <div className={`alert ${messageType === "success" ? "alert-success" : "alert-error"}`}>
-          {message}
-        </div>
-      )}
-        <h2 className="text-2xl font-semibold mb-4 dark:text-white">Company Login</h2>
+          <div
+            className={`mb-4 text-sm rounded-md p-3 ${
+              messageType === "success"
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
+            {message}
+          </div>
+        )}
 
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          placeholder="Email"
-          required
-          className="w-full p-2 mb-3 border rounded dark:bg-gray-700 dark:text-white"
-        />
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          placeholder="Password"
-          required
-          className="w-full p-2 mb-4 border rounded dark:bg-gray-700 dark:text-white"
-        />
+        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800 dark:text-white">
+          Company Login
+        </h2>
+
+        <div className="space-y-4">
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Email address"
+            required
+            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none dark:bg-gray-700 dark:text-white"
+          />
+
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="Password"
+            required
+            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none dark:bg-gray-700 dark:text-white"
+          />
+        </div>
 
         <Button
           type="submit"
-          className="w-full mb-3 bg-[#94BFA7] text-white py-2 rounded hover:opacity-90"
+          className="w-full mt-6 bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
         >
           Login
         </Button>
-        <Link to="/signup">
-        <Button
-          className="w-full bg-[#94BFA7] text-white py-2 rounded hover:opacity-90"
-        >
-          Signup
-        </Button></Link>
 
-        {error && <p className="text-red-600 mt-4">{error}</p>}
+        <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
+          Don’t have an account?{" "}
+          <Link
+            to="/signup"
+            className="text-blue-600 hover:underline dark:text-blue-400"
+          >
+            Sign up
+          </Link>
+        </p>
+
+        {error && <p className="text-red-600 mt-4 text-sm">{error}</p>}
       </form>
     </div>
+
   );
 };
 

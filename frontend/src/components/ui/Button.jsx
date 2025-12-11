@@ -11,14 +11,14 @@ const Button = ({
   className = "",
   disabled = false
 }) => {
-  const baseStyles = "px-4 py-2 rounded font-medium focus:outline-none transition duration-200";
+  const baseStyles = "px-2 py-2 rounded font-medium focus:outline-none transition duration-200";
 
   const variants = {
-    primary: "bg-violet-600 text-white hover:bg-violet-700",
-    secondary: "bg-violet-100 text-violet-800 hover:bg-violet-200",
+    primary: "bg-indigo-600 text-white hover:bg-indigo-700",
+    secondary: "bg-indigo-100 text-indigo-800 hover:bg-indigo-200",
     danger: "bg-red-600 text-white hover:bg-red-700",
-    outline: "border border-violet-600 text-violet-600 hover:bg-violet-50",
-    ghost: "text-violet-600 hover:bg-violet-100"
+    outline: "border border-indigo-600 text-indigo-600 hover:bg-indigo-50",
+    ghost: "text-indigo-600 hover:bg-indigo-100"
   };
 
   return (

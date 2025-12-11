@@ -16,26 +16,26 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col justify-between bg-gray-50">
-      <header className="flex justify-between items-center p-6 shadow bg-gradient-to-r from-violet-500 to-violet-700 text-white">
-        <h1 className="text-2xl font-bold">Customer Feedback Analysis</h1>
+      <header className="flex justify-between items-center p-4 shadow bg-gradient-to-br from-indigo-400 to-blue-300 text-white">
+        <h1 className="text-lg font-bold">Customer Feedback Analysis</h1>
         <div className="desktop-nav hidden md:block">
           <Link to="/login" className="m-4">
             <Button
               variant="outline"
-              className="border-white text-white hover:bg-white hover:text-violet-700"
+              className="border-white text-white hover:bg-white hover:text-indigo-700"
             >
               Login
             </Button>
           </Link>
           <Link to="/signup">
-            <Button className="hover:bg-white text-white-700 hover:bg-violet-100 px-4 py-2 rounded-md">
+            <Button className="hover:bg-white text-white-700 hover:bg-indigo-100 hover:text-indigo-700 px-4 py-2 rounded-md">
               Sign Up
             </Button>
           </Link>
         </div>
         <span
           onClick={handleSidebarToggle}
-          className="md:hidden text-xl cursor-pointer px-4 py-2 border rounded hover:bg-violet-600"
+          className="md:hidden text-xl cursor-pointer px-4 py-2 border rounded hover:bg-indigo-600"
         >
           ☰
         </span>
@@ -54,10 +54,10 @@ const LandingPage = () => {
           sidebarToggle ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 ease-in-out p-6 space-y-6`}
       >
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold text-violet-700">Menu</h2>
+        <div className="flex justify-between items-center mb-6 border-b border-gray-200">
+          <h2 className="text-xl font-semibold text-indigo-700">Menu</h2>
           <button
-            className="text-xl text-gray-600 hover:text-violet-600"
+            className="text-xl text-gray-600 hover:text-indigo-600"
             onClick={() => setSidebarToggle(false)}
           >
             ✕
@@ -66,13 +66,13 @@ const LandingPage = () => {
         <Link to="/login" onClick={() => setSidebarToggle(false)}>
           <Button
             variant="outline"
-            className="w-full border-violet-700 text-violet-700 hover:bg-violet-100"
+            className="w-full border-indigo-700 text-indigo-700 hover:bg-indigo-100"
           >
             Login
           </Button>
         </Link>
         <Link to="/signup" onClick={() => setSidebarToggle(false)}>
-          <Button className="w-full bg-violet-600 text-white hover:bg-violet-700">
+          <Button className="w-full bg-indigo-600 text-white hover:bg-indigo-700 mt-6">
             Sign Up
           </Button>
         </Link>

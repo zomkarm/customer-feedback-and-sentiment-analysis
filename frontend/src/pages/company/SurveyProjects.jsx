@@ -32,7 +32,7 @@ const SurveyProjects = () => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/survey/list?page=${page}&limit=${pageSize}&isPaginated=true&search=${encodeURIComponent(query)}`,
+        `${import.meta.env.VITE_API_BASE_URL}/survey/list?page=${page}&limit=${pageSize}&isPaginated=true&search=${encodeURIComponent(query)}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -67,7 +67,7 @@ const SurveyProjects = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this survey?")) return;
     try {
-      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/survey/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/survey/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchSurveys(currentPage, searchQuery);
@@ -95,7 +95,7 @@ const SurveyProjects = () => {
   return (
     <div className="space-y-6">
       {/* Top Bar */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center px-6 pb-2 gap-4 mb-4 border-b border-gray-200">
         <h2 className="text-2xl font-bold" style={{ color: DASHBOARD_THEME_COLOR }}>
           Survey Projects
         </h2>

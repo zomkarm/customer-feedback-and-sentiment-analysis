@@ -87,7 +87,7 @@ const CompanyDashboard = () => {
   ];
 
   return (
-    <div className="flex min-h-screen bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200 transition-colors duration-500">
+    <div className="flex min-h-screen bg-gray-50 text-gray-800 dark:bg-gray-800 dark:text-gray-200 transition-colors duration-500">
       {/* Sidebar overlay */}
       <div
         className={`fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm transition-opacity duration-300 ease-in-out z-20 md:hidden
@@ -99,13 +99,12 @@ const CompanyDashboard = () => {
       {/* Sidebar */}
       <aside
         ref={sidebarRef}
-        style={{ backgroundColor: theme.primary }}
-        className={`fixed top-0 left-0 min-h-screen w-64 text-white shadow-lg p-6 z-30 transform transition-transform duration-300 md:relative md:translate-x-0 ${
+        className={`fixed top-0 left-0 min-h-screen w-64 text-gray-800 shadow-lg p-6 z-30 bg-gradient-to-br from-indigo-300 to-blue-100 dark:from-gray-700 dark:to-gray-800 dark:text-white transform transition-transform duration-300 md:relative md:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:flex md:flex-col md:w-64 select-none`}
       >
-        <h2 className="text-2xl font-extrabold mb-8 tracking-wide">Company Dashboard</h2>
-        <nav className="flex flex-col gap-5 text-lg font-semibold">
+        <h2 className="text-2xl font-bold mb-12 tracking-wide">Dashboard</h2>
+        <nav className="flex flex-col gap-2 text-lg font-semibold">
           {navItems.map((item) => (
             <button
               key={item}
@@ -115,9 +114,9 @@ const CompanyDashboard = () => {
               }}
               style={{
                 backgroundColor: activePage === item ? theme.primaryDark : undefined,
-                color: activePage === item ? theme.textOnPrimary : "#d1d5db",
+                color: activePage === item ? "white" : undefined,
               }}
-              className={`block px-4 py-2 text-sm rounded transition-colors duration-300 w-full text-left hover:opacity-80`}
+              className={`block px-4 py-2 text-sm hover:text-white rounded transition-colors duration-300 w-full text-left hover:opacity-80`}
             >
               {item}
             </button>
@@ -126,8 +125,8 @@ const CompanyDashboard = () => {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 flex flex-col p-6 md:p-10 overflow-auto">
-        <div className="flex justify-between items-center mb-8">
+      <main className="flex-1 flex flex-col py-6 overflow-auto">
+        <div className="flex justify-between items-center pb-2 px-6 mb-6 border-b border-gray-200">
           <button
             ref={toggleButtonRef}
             className="md:hidden p-3 rounded-md text-white"

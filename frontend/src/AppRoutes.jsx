@@ -12,6 +12,7 @@ import AdminDashboard from "./pages/admin/Dashboard";
 import CompanyProtectedRoute from "./components/route/CompanyProtectedRoute";
 import FeedbackForm from "./components/form/FeedbackForm";
 import Visualization from "./pages/company/Visualizations";
+import NotFound from "./pages/NotFound";
 
 
 const AppRoutes = () => {
@@ -19,7 +20,7 @@ const AppRoutes = () => {
   const [adminInfo, setAdminInfo] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const location = useLocation(); // ✅ Now safe to use
+  const location = useLocation();
 
   useEffect(() => {
     const token = localStorage.getItem("adminToken");
@@ -68,6 +69,8 @@ const AppRoutes = () => {
         />
       <Route path="/feedback/:surveyId" element={<FeedbackForm />} />
       <Route path="/company/visualization" element={<Visualization />} />
+      {/* Catch-all route */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
